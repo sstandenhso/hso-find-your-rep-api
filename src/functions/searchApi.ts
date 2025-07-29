@@ -8,7 +8,7 @@ import { ZipSearchData, DataError } from "../types/types"; // Adjust path as nee
 // --- Configuration for Blob Storage ---
 // These will be pulled from Application Settings in your Azure Function App
 const BLOB_CONNECTION_STRING_NAME = "AzureWebJobsStorage"; // Default connection string key for Functions
-const BLOB_CONTAINER_NAME = process.env.BLOB_CONTAINER_NAME || "hso-storage-blob"; // Set in Function App settings
+const BLOB_CONTAINER_NAME = process.env.BLOB_CONTAINER_NAME || "hso_storage_blob"; // Set in Function App settings
 const BLOB_FILE_NAME = process.env.BLOB_FILE_NAME || "searchByZip.json"; // Set in Function App settings
 
 // --- In-memory cache for the JSON data ---
@@ -55,10 +55,10 @@ async function loadDataFromBlob(context: InvocationContext): Promise<ZipSearchDa
     }
 }
 
-
-// --- Main Azure Function Handler ---
 export async function searchApi(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
     context.log(`Http function processed request for url "${request.url}"`);
+
+    // ... (rest of your handler logic) ...
 
     // --- 1. Extract zipCode from query parameters ---
     // In Azure Functions, query parameters are accessed via request.query.get()
@@ -117,7 +117,6 @@ export async function searchApi(request: HttpRequest, context: InvocationContext
         };
 
     } catch (error) {
-        // --- 5. Handle errors ---
         console.error("Error in searchApi function:", error);
 
         // Check if the error is from JSON parsing during data load
@@ -128,7 +127,6 @@ export async function searchApi(request: HttpRequest, context: InvocationContext
                 headers: { 'Content-Type': 'application/json' }
             };
         }
-        // Generic error for file read or other unexpected issues
         return {
             status: 500,
             jsonBody: { error: "An unexpected error occurred while processing your request." } as DataError,
@@ -136,11 +134,3 @@ export async function searchApi(request: HttpRequest, context: InvocationContext
         };
     }
 }
-
-// --- Register the HTTP function with the Azure Functions App ---
-app.http('searchApi', {
-    methods: ['GET'], // Assuming your Next.js app only sends GET requests
-    authLevel: 'anonymous', // Or 'function' if you want API key protection
-    handler: searchApi,
-    route: 'search' // This makes the endpoint accessible at /api/search
-});

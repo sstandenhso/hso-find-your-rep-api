@@ -5,19 +5,21 @@ import { app } from '@azure/functions';
 import { salesRepApi } from './salesRepApi';
 import { searchApi } from './searchApi';
 
-console.log("DEBUG: app.ts - Starting function registration."); // ADD THIS
+console.log("DEBUG: app.ts - Starting function registration.");
 app.http('salesRepApi', {
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'POST'], // Keep methods as you need them
     authLevel: 'anonymous',
-    handler: salesRepApi
+    handler: salesRepApi,
+    route: 'sales-rep' // <-- ADDED THIS LINE
 });
-console.log("DEBUG: app.ts - salesRepApi registered."); // ADD THIS
+console.log("DEBUG: app.ts - salesRepApi registered.");
 
 app.http('searchApi', {
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'POST'], // Keep methods as you need them
     authLevel: 'anonymous',
-    handler: searchApi
+    handler: searchApi,
+    route: 'search' // <-- ADDED THIS LINE
 });
-console.log("DEBUG: app.ts - searchApi registered."); // ADD THIS
+console.log("DEBUG: app.ts - searchApi registered.");
 
-console.log("DEBUG: app.ts - All functions processed."); // ADD THIS
+console.log("DEBUG: app.ts - All functions processed.");

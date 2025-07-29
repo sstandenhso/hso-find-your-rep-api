@@ -56,7 +56,6 @@ async function loadSalesRepDataFromBlob(context: InvocationContext): Promise<Sal
 }
 
 
-// --- Main Azure Function Handler ---
 export async function salesRepApi(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
     context.log(`Http function processed request for url "${request.url}"`);
 
@@ -73,7 +72,7 @@ export async function salesRepApi(request: HttpRequest, context: InvocationConte
 
     } catch (error) {
         // Using console.error due to previous linting issue with context.log.error
-        console.error("Error in salesRepApi function:", error);
+        console.error("Error loading sales rep data from Blob Storage:", error);
 
         // Check if the error is from JSON parsing during data load
         if (error instanceof SyntaxError) {
@@ -91,11 +90,3 @@ export async function salesRepApi(request: HttpRequest, context: InvocationConte
         };
     }
 }
-
-// --- Register the HTTP function with the Azure Functions App ---
-app.http('salesRepApi', {
-    methods: ['GET'], // This is a GET endpoint for data retrieval
-    authLevel: 'anonymous', // Publicly accessible
-    handler: salesRepApi,
-    route: 'sales-rep' // This makes the endpoint accessible at /api/sales-rep
-});
