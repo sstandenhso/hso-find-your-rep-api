@@ -41,6 +41,16 @@ jobs:
           echo "Contents of dist directory after build:" # Debug print
           ls -l dist # Debug print
           popd
+      - name: List compiled files
+        run: |
+          echo "Listing contents of dist/src/functions/"
+          ls -l dist/src/functions/
+          echo "Listing contents of dist/"
+          ls -l dist/
+          echo "Listing contents of the root after build (looking for function.json files)"
+          ls -l 
+          # Optionally, if you suspect issues, you can try to view content of generated function.json
+          # find . -name "function.json" -exec cat {} + || true
 
       - name: 'Package Function App for Deployment'
         shell: bash
