@@ -43,8 +43,7 @@ jobs:
         shell: bash
         run: |
           pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
-          # CORRECTED LINE: func pack will now automatically add the .zip extension
-          func pack --output ./functionapp --language node --typescript
+          func pack --output ./functionapp --language node --typescript --verbose # ADD --verbose HERE
           popd
 
       - name: Upload artifact for deployment job

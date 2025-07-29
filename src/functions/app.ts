@@ -2,25 +2,22 @@
 import { app } from '@azure/functions';
 
 // Import your individual function logic
-import { salesRepApi } from './salesRepApi'; // Assuming salesRepApi.ts exports a named function 'salesRepApi'
-import { searchApi } from './searchApi'; // Assuming searchApi.ts exports a named function 'searchApi'
+import { salesRepApi } from './salesRepApi';
+import { searchApi } from './searchApi';
 
-// Register your functions with the app object
-// Assuming salesRepApi is an HTTP trigger, adjust methods/authLevel as needed
+console.log("DEBUG: app.ts - Starting function registration."); // ADD THIS
 app.http('salesRepApi', {
-    methods: ['GET', 'POST'], // Adjust methods based on your function
-    authLevel: 'anonymous', // Adjust authLevel (function, anonymous, admin)
-    handler: salesRepApi // Your function handler from salesRepApi.ts
-});
-
-// Assuming searchApi is an HTTP trigger
-app.http('searchApi', {
-    methods: ['GET', 'POST'], // Adjust methods based on your function
+    methods: ['GET', 'POST'],
     authLevel: 'anonymous',
-    handler: searchApi // Your function handler from searchApi.ts
+    handler: salesRepApi
 });
+console.log("DEBUG: app.ts - salesRepApi registered."); // ADD THIS
 
-// You might also have a default export if your salesRepApi or searchApi were default exports.
-// Example if salesRepApi.ts was 'export default async function salesRepApi(...)'
-// import salesRepApiDefault from './salesRepApi';
-// app.http('salesRepApi', { methods: ['GET', 'POST'], handler: salesRepApiDefault });
+app.http('searchApi', {
+    methods: ['GET', 'POST'],
+    authLevel: 'anonymous',
+    handler: searchApi
+});
+console.log("DEBUG: app.ts - searchApi registered."); // ADD THIS
+
+console.log("DEBUG: app.ts - All functions processed."); // ADD THIS
