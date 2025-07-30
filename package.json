@@ -2,7 +2,7 @@
   "name": "hso-find-your-rep-api",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/src/functions/app.js",
+  "main": "dist/functions/app.js",
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
