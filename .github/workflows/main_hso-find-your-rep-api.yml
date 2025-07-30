@@ -57,9 +57,9 @@ jobs:
         run: |
           set -euxo pipefail # Added for strict error checking
           echo "Starting func pack command..." # Debug print
-          # Execute func pack with verbose output and direct it to a log file
-          # We'll then cat the log file to see all output
-          func pack --output ./functionapp --language node --typescript --verbose 2>&1 | tee func_pack_output.log
+          
+          # Execute func pack with verbose output and redirect all output to a log file
+          func pack --output ./functionapp --language node --typescript --verbose > func_pack_output.log 2>&1
           
           # Check the exit code of func pack
           FUNC_PACK_EXIT_CODE=${PIPESTATUS[0]}
