@@ -9,9 +9,18 @@ export interface DataError {
   error: string;
 }
 
-export type SalesRepData = {
-  territory: string;
-  salesRepName: string;
-  salesRepEmailAddress: string;
-  salesRepPhoneNumber: string;
+export type SalesRep = {
+  name: string;
+  phone: string;
+  email: string;
+  ID: number;
+};
+
+export type State = {
+  state: String,
+   stateAbbreviation: String,
+   supportRep: number,
+   productRep: number,
+   salesRep: number,
+   groupPracticeRep: number
 };
