@@ -1,0 +1,14 @@
+{
+  "salesReps": [
+    { "id": 1001, "name": "Jordan Rivers", "email": "j.rivers@company.com", "phone": "555-010-1001" },
+    { "id": 1002, "name": "Casey Morgan", "email": "c.morgan@company.com", "phone": "555-010-1002" },
+    { "id": 1003, "name": "Taylor Vance", "email": "t.vance@company.com", "phone": "555-010-1003" },
+    { "id": 1004, "name": "Riley Quinn", "email": "r.quinn@company.com", "phone": "555-010-1004" },
+    { "id": 1005, "name": "Morgan Hayes", "email": "m.hayes@company.com", "phone": "555-010-1005" },
+    { "id": 1006, "name": "Alex Skyler", "email": "a.skyler@company.com", "phone": "555-010-1006" },
+    { "id": 1007, "name": "Jamie Lane", "email": "j.lane@company.com", "phone": "555-010-1007" },
+    { "id": 1008, "name": "Drew Parker", "email": "d.parker@company.com", "phone": "555-010-1008" },
+    { "id": 1009, "name": "Skylar Reed", "email": "s.reed@company.com", "phone": "555-010-1009" },
+    { "id": 1010, "name": "Dakota Bell", "email": "d.bell@company.com", "phone": "555-010-1010" }
+  ]
+}
