@@ -24,3 +24,10 @@ export type State = {
    salesRep: number,
    groupPracticeRep: number
 };
+
+export type Data =  ZipSearchData | DataError | SalesRep | State;
+
+export type TestData = {
+    id: number;
+    name: string;
+  }[];
