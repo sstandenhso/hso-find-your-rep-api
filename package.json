@@ -1,6 +1,6 @@
 {
   "name": "hso-find-your-rep-api",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "",
   "main": "dist/functions/app.js",
   "scripts": {
