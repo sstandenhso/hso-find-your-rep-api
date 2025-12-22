@@ -13,16 +13,16 @@ export type SalesRep = {
   name: string;
   phone: string;
   email: string;
-  ID: number;
+  ID: string;
 };
 
 export type State = {
-  state: String,
-   stateAbbreviation: String,
-   supportRep: number,
-   productRep: number,
-   salesRep: number,
-   groupPracticeRep: number
+   state: string,
+   stateAbbreviation: string,
+   supportRep: string,
+   productRep: string,
+   salesRep: string,
+   groupPracticeRep: string
 };
 
 export type Data =  ZipSearchData | DataError | SalesRep | State;
