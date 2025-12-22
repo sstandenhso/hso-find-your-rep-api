@@ -20,7 +20,7 @@ app.http('searchApi', {
     methods: ['GET', 'POST'], // Keep methods as you need them
     authLevel: 'anonymous',
     handler: searchApi,
-    route: 'search' // <-- ADDED THIS LINE
+    route: 'search/zip-code' // <-- ADDED THIS LINE
 });
 console.log("DEBUG: app.ts - searchApi registered.");
 
@@ -36,7 +36,7 @@ app.http('searchByStateAPI', {
     methods: ['GET', 'POST'], // Keep methods as you need them
     authLevel: 'anonymous',
     handler: searchByStateAPI,
-    route: 'states/get-reps' // <-- ADDED THIS LINE
+    route: 'search/states/get-reps' // <-- ADDED THIS LINE
 });
 console.log("DEBUG: app.ts - searchByStateAPI registered.");
 
