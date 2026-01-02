@@ -19,10 +19,10 @@ export type SalesRep = {
 export type State = {
    state: string,
    stateAbbreviation: string,
-   supportRep: string,
-   productRep: string,
-   salesRep: string,
-   groupPracticeRep: string
+   supportRep: number,
+   productRep: number,
+   salesRep: number,
+   groupPracticeRep: number
 };
 
 export type Data =  ZipSearchData | DataError | SalesRep | State;

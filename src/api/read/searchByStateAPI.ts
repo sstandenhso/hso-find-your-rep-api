@@ -62,23 +62,12 @@ export async function searchByStateAPI(request: HttpRequest, context: Invocation
 
     // --- 1. Extract stateAbbreviation from query parameters ---
     // In Azure Functions, query parameters are accessed via request.query.get()
-    const stateAbbreviationQueryParam = request.query.get('stateAbbreviation');
+    const stateAbbreviation = request.query.get('stateAbbreviation');
 
-    let statesToSearch: string[] = [];
-
-    if (typeof stateAbbreviationQueryParam === "string") {
-        statesToSearch = stateAbbreviationQueryParam.split(',').map(s => s.trim()).filter(s => s.length > 0);
-    }
-    // Note: Azure Functions' request.query.get() typically returns a single string,
-    // even if the original URL had multiple query params with the same name.
-    // If you expect `zipCode=123,456` this will work.
-    // If you expect `zipCode=123&zipCode=456`, you'd need to use a different method
-    // (e.g., request.query.getAll('zipCode')), but your Next.js code handles comma-separated.
-
-    if (statesToSearch.length === 0) {
+    if (!stateAbbreviation || typeof stateAbbreviation !== "string" || stateAbbreviation.trim().length === 0) {
         return {
             status: 400,
-            jsonBody: { error: "No valid states provided for search." } as DataError,
+            jsonBody: { error: "A valid stateAbbreviation query parameter is required." } as DataError,
             headers: { 'Content-Type': 'application/json' }
         };
     }
@@ -87,41 +76,21 @@ export async function searchByStateAPI(request: HttpRequest, context: Invocation
         // --- 2. Load the JSON data (from cache or Blob Storage) ---
         const jsonData = await loadDataFromBlob(context);
 
-        const foundTerritories: string[] = [];
+        // --- 3. Find the matching state ---
+        const foundState = jsonData.find(item => item.stateAbbreviation === stateAbbreviation.trim());
 
-        // --- 3. Iterate and find matching territories ---
-        statesToSearch.forEach(searchState => {
-            const matches = jsonData.filter(item => item.stateAbbreviation === searchState);
-            matches.forEach(match => {
-                if (!foundTerritories.includes(match.salesRep)) {
-                    foundTerritories.push(match.salesRep);
-                }
-                if (!foundTerritories.includes(match.supportRep)) {
-                    foundTerritories.push(match.supportRep);
-                }
-                if (!foundTerritories.includes(match.productRep)) {
-                    foundTerritories.push(match.productRep);
-                }
-                if (!foundTerritories.includes(match.groupPracticeRep)) {
-                    foundTerritories.push(match.groupPracticeRep);
-                }
-            });
-        });
-
-        if (foundTerritories.length === 0) {
+        if (!foundState) {
             return {
                 status: 404,
-                jsonBody: { error: "No territories found for the provided states." } as DataError,
+                jsonBody: { error: `No state found for the provided state abbreviation: ${stateAbbreviation}.` } as DataError,
                 headers: { 'Content-Type': 'application/json' }
             };
         }
 
-        foundTerritories.sort(); // Sorts strings alphabetically
-
         // --- 4. Return successful response ---
         return {
             status: 200,
-            jsonBody: foundTerritories,
+            jsonBody: foundState,
             headers: { 'Content-Type': 'application/json' }
         };
 

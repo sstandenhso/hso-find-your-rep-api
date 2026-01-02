@@ -36,7 +36,7 @@ app.http('searchByStateAPI', {
     methods: ['GET', 'POST'], // Keep methods as you need them
     authLevel: 'anonymous',
     handler: searchByStateAPI,
-    route: 'search/states/get-reps' // <-- ADDED THIS LINE
+    route: 'search/state' // <-- ADDED THIS LINE
 });
 console.log("DEBUG: app.ts - searchByStateAPI registered.");
 
