@@ -1,6 +1,3 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/azure/functions-action
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
 name: Build and deploy Node.js project to Azure Function App - hso-find-your-rep-api
 
 on:
@@ -10,95 +7,49 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' # set this to the path to your web app project, defaults to the repository root
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' 
 
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read #This is required for actions/checkout
+      contents: read
 
     steps:
       - name: 'Checkout GitHub Action'
         uses: actions/checkout@v4
 
-      - name: Setup Node 20.x Environment
+      - name: Setup Node 22.x Environment
         uses: actions/setup-node@v3
         with:
-          node-version: '20.x' # Use Node.js 20 LTS for consistency with Azure V4
-
-      - name: 'Install Azure Functions Core Tools'
-        run: npm install -g azure-functions-core-tools@4 # Use version 4
+          node-version: '22' # Upgraded from 20 to 22
 
       - name: 'Resolve Project Dependencies and Build'
         shell: bash
         run: |
-          set -euxo pipefail # Added for strict error checking
-          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
-          echo "Current directory after pushd: $(pwd)" # Debug print
           npm install
-          npm run build # Your TypeScript compilation (tsc)
-          echo "Contents of dist directory after build:" # Debug print
-          ls -l dist # Debug print
-          popd
-      - name: List compiled files
-        run: |
-          echo "Listing contents of dist/functions/"
-          ls -l dist/functions/ # <-- CORRECTED PATH HERE
-          echo "Listing contents of dist/"
-          ls -l dist/
-          echo "Listing contents of the root after build (looking for function.json files)"
-          ls -l
-          # Optionally, if you suspect issues, you can try to view content of generated function.json
-          # find . -name "function.json" -exec cat {} + || true
+          npm run build
 
       - name: 'Package Function App for Deployment'
         shell: bash
         run: |
-          set -euxo pipefail # Added for strict error checking
-          echo "Starting func pack command..." # Debug print
-          
-          # Execute func pack with verbose output and redirect all output to a log file
-          func pack --output ./functionapp --language node --typescript --verbose > func_pack_output.log 2>&1
-          
-          # Check the exit code of func pack
-          FUNC_PACK_EXIT_CODE=${PIPESTATUS[0]}
-          echo "func pack finished with exit code: ${FUNC_PACK_EXIT_CODE}"
-          
-          echo "Contents of current directory after func pack:" # Debug print
-          ls -l # Debug print
-
-          # Output the func pack log to the console
-          echo "--- START func pack detailed output ---"
-          cat func_pack_output.log
-          echo "--- END func pack detailed output ---"
-
-          # Fail the step if func pack did not succeed
-          if [ "${FUNC_PACK_EXIT_CODE}" -ne 0 ]; then
-              echo "Error: func pack command failed. Please review the detailed output above."
-              exit 1
-          fi
-
-          # Verify if the zip file was created
-          if [ ! -f "./functionapp.zip" ]; then
-              echo "Error: functionapp.zip was not created by func pack."
-              exit 1
-          fi
-          echo "functionapp.zip successfully created." # Debug print
-
+          # Create a zip of the root directory
+          # We include: host.json, package.json, dist/ (compiled JS), and node_modules/ (runtime deps)
+          # We exclude: src/ (TS source), .git, and other dev-only files to keep the package small
+          zip -r functionapp.zip . -x "src/*" ".git/*" ".github/*" "tsconfig.json" "*.log"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: function-app-package
-          path: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/functionapp.zip
+          path: ./functionapp.zip
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
     permissions:
-      id-token: write #This is required for requesting the JWT
-      contents: read #This is required for actions/checkout
+      id-token: write
+      contents: read
 
     steps:
       - name: Download artifact from build job
