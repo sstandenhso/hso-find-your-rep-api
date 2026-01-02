@@ -10,7 +10,7 @@ import { getRepsAPI } from '../api/read/getRepsAPI';
 console.log("DEBUG: app.ts - Starting function registration.");
 app.http('salesRepApi', {
     methods: ['GET', 'POST'], // Keep methods as you need them
-    authLevel: 'anonymous',
+    authLevel: 'function',
     handler: salesRepApi,
     route: 'sales-rep' // <-- ADDED THIS LINE
 });
@@ -18,7 +18,7 @@ console.log("DEBUG: app.ts - salesRepApi registered.");
 
 app.http('searchApi', {
     methods: ['GET', 'POST'], // Keep methods as you need them
-    authLevel: 'anonymous',
+    authLevel: 'function',
     handler: searchApi,
     route: 'search/zip-code' // <-- ADDED THIS LINE
 });
@@ -26,7 +26,7 @@ console.log("DEBUG: app.ts - searchApi registered.");
 
 app.http('getRepsAPI', {
     methods: ['GET', 'POST'], // Keep methods as you need them
-    authLevel: 'anonymous',
+    authLevel: 'function',
     handler: getRepsAPI,
     route: 'sales-reps' // <-- ADDED THIS LINE
 });
@@ -34,7 +34,7 @@ console.log("DEBUG: app.ts - getRepsAPI registered.");
 
 app.http('searchByStateAPI', {
     methods: ['GET', 'POST'], // Keep methods as you need them
-    authLevel: 'anonymous',
+    authLevel: 'function',
     handler: searchByStateAPI,
     route: 'search/state' // <-- ADDED THIS LINE
 });
