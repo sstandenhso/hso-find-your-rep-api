@@ -9,9 +9,25 @@ export interface DataError {
   error: string;
 }
 
-export type SalesRepData = {
-  territory: string;
-  salesRepName: string;
-  salesRepEmailAddress: string;
-  salesRepPhoneNumber: string;
+export type SalesRep = {
+  name: string;
+  phone: string;
+  email: string;
+  ID: string;
 };
+
+export type State = {
+   state: string,
+   stateAbbreviation: string,
+   supportRep: number,
+   productRep: number,
+   salesRep: number,
+   groupPracticeRep: number
+};
+
+export type Data =  ZipSearchData | DataError | SalesRep | State;
+
+export type TestData = {
+    id: number;
+    name: string;
+  }[];

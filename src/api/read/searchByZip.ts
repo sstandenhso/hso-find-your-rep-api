@@ -3,7 +3,7 @@ import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/fu
 import { BlobServiceClient } from "@azure/storage-blob";
 // Assuming you have a types/types.ts file in your functions project as well,
 // or you can define these types directly in this file if they're only used here.
-import { ZipSearchData, DataError } from "../types/types"; // Adjust path as needed
+import { ZipSearchData, DataError } from "../../types/types"; // Adjust path as needed
 
 // --- Configuration for Blob Storage ---
 // These will be pulled from Application Settings in your Azure Function App

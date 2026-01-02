@@ -2,7 +2,7 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 import { BlobServiceClient } from "@azure/storage-blob";
 // Assuming you have a types/types.ts file in your functions project as well
-import { SalesRepData, DataError } from "../types/types"; // Adjust path as needed
+import { SalesRep, DataError } from "../../types/types"; // Adjust path as needed
 
 // --- Configuration for Blob Storage ---
 // These will be pulled from Application Settings in your Azure Function App
@@ -12,10 +12,10 @@ const SALES_REPS_BLOB_FILE_NAME = process.env.SALES_REPS_BLOB_FILE_NAME || "sale
 
 // --- In-memory cache for the JSON data ---
 // This will store the data after the first successful read from Blob Storage
-let cachedSalesRepData: SalesRepData[] | null = null;
+let cachedSalesRepData: SalesRep[] | null = null;
 
 // --- Helper function to load Sales Rep data from Blob Storage ---
-async function loadSalesRepDataFromBlob(context: InvocationContext): Promise<SalesRepData[]> {
+async function loadSalesRepDataFromBlob(context: InvocationContext): Promise<SalesRep[]> {
     if (cachedSalesRepData) {
         context.log("Using cached sales rep data.");
         return cachedSalesRepData;
@@ -43,7 +43,7 @@ async function loadSalesRepDataFromBlob(context: InvocationContext): Promise<Sal
             data += chunk.toString();
         }
 
-        const parsedData: SalesRepData[] = JSON.parse(data);
+        const parsedData: SalesRep[] = JSON.parse(data);
         cachedSalesRepData = parsedData; // Cache the data
         context.log("Sales rep data loaded and cached from Blob Storage successfully.");
         return parsedData;
