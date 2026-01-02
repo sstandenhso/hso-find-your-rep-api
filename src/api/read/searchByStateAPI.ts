@@ -58,57 +58,76 @@ async function loadDataFromBlob(context: InvocationContext): Promise<State[]> {
 export async function searchByStateAPI(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
     context.log(`Http function processed request for url "${request.url}"`);
 
-    // ... (rest of your handler logic) ...
+    let state: string;
+    let foundState: State | undefined;
 
-    // --- 1. Extract stateAbbreviation from query parameters ---
-    // In Azure Functions, query parameters are accessed via request.query.get()
-    const stateAbbreviation = request.query.get('stateAbbreviation');
+    if(request.query.get('stateAbbreviation')) {
+        state = request.query.get('stateAbbreviation') || "";
+        try {
+            // --- 2. Load the JSON data (from cache or Blob Storage) ---
+            const jsonData = await loadDataFromBlob(context);
 
-    if (!stateAbbreviation || typeof stateAbbreviation !== "string" || stateAbbreviation.trim().length === 0) {
+            // --- 3. Find the matching state ---
+            foundState = jsonData.find(item => item.stateAbbreviation === state.trim());
+
+            if (!foundState) {
+                return {
+                    status: 404,
+                    jsonBody: { error: `No state found for the provided state abbreviation: ${state}.` } as DataError,
+                    headers: { 'Content-Type': 'application/json' }
+                };
+            }
+
+            // --- 4. Return successful response ---
+            return {
+                status: 200,
+                jsonBody: foundState,
+                headers: { 'Content-Type': 'application/json' }
+            };
+
+        } catch (error) {
+            console.error("Error in searchByStateAPI function:", error);
+        }
+    }
+    else {
+        state = request.query.get('state') || "";
+
+        try {
+            // --- 2. Load the JSON data (from cache or Blob Storage) ---
+            const jsonData = await loadDataFromBlob(context);
+
+            // --- 3. Find the matching state ---
+            foundState = jsonData.find(item => item.state === state.trim());
+
+            if (!foundState) {
+                return {
+                    status: 404,
+                    jsonBody: { error: `No state found for the provided state: ${state}.` } as DataError,
+                    headers: { 'Content-Type': 'application/json' }
+                };
+            }
+
+            // --- 4. Return successful response ---
+            return {
+                status: 200,
+                jsonBody: foundState,
+                headers: { 'Content-Type': 'application/json' }
+            };
+        } catch (error) {
+            console.error("Error in searchByStateAPI function:", error);
+        }
+    }
+
+    if (!state || typeof state !== "string" || state.trim().length === 0) {
         return {
             status: 400,
             jsonBody: { error: "A valid stateAbbreviation query parameter is required." } as DataError,
             headers: { 'Content-Type': 'application/json' }
         };
     }
-
-    try {
-        // --- 2. Load the JSON data (from cache or Blob Storage) ---
-        const jsonData = await loadDataFromBlob(context);
-
-        // --- 3. Find the matching state ---
-        const foundState = jsonData.find(item => item.stateAbbreviation === stateAbbreviation.trim());
-
-        if (!foundState) {
-            return {
-                status: 404,
-                jsonBody: { error: `No state found for the provided state abbreviation: ${stateAbbreviation}.` } as DataError,
-                headers: { 'Content-Type': 'application/json' }
-            };
-        }
-
-        // --- 4. Return successful response ---
-        return {
-            status: 200,
-            jsonBody: foundState,
-            headers: { 'Content-Type': 'application/json' }
-        };
-
-    } catch (error) {
-        console.error("Error in searchByStateAPI function:", error);
-
-        // Check if the error is from JSON parsing during data load
-        if (error instanceof SyntaxError) {
-            return {
-                status: 500,
-                jsonBody: { error: "Failed to parse the JSON file (invalid format)." } as DataError,
-                headers: { 'Content-Type': 'application/json' }
-            };
-        }
         return {
             status: 500,
             jsonBody: { error: "An unexpected error occurred while processing your request." } as DataError,
             headers: { 'Content-Type': 'application/json' }
         };
-    }
 }
